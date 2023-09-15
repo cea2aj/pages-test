@@ -17,6 +17,22 @@ import {
 } from "@yext/pages";
 import * as React from "react";
 import "../index.css";
+import '@yext/search-ui-react/bundle.css'
+import { provideHeadless, SearchHeadlessProvider } from '@yext/search-headless-react';
+import {
+  SearchBar,
+  UniversalResults,
+  VerticalConfigMap,
+  AppliedFilters,
+  DirectAnswer,
+  Facets,
+  FilterDivider,
+  Geolocation,
+  Pagination,
+  ResultsCount,
+  SpellCheck,
+  MapboxMap
+} from "@yext/search-ui-react";
 
 /**
  * Required when Knowledge Graph Stream is used for a template.
@@ -71,6 +87,21 @@ export const getHeadConfig: GetHeadConfig<TemplateRenderProps> = ({
   };
 };
 
+const headlessConfig = {
+  apiKey: '<apiKey>',
+  experienceKey: 'connor-test',
+  locale: 'en',
+  experienceVersion: 'PRODUCTION',
+}
+
+const searcher = provideHeadless(headlessConfig);
+
+const verticalConfigMap: VerticalConfigMap = {
+  help_articles: {
+    label: "Help Articles"
+  }
+}
+
 /**
  * This is the main template. It can have any name as long as it's the default export.
  * The props passed in here are the direct stream document defined by `config`.
@@ -86,6 +117,18 @@ const EntityPage: Template<TemplateRenderProps> = ({
     <>
       <h1>Entity Powered Page</h1>
       <div>Entity Name: {name}</div>
+      <SearchHeadlessProvider searcher={searcher}>
+        <SearchBar />
+        <AppliedFilters />
+        <SpellCheck />
+        <DirectAnswer />
+        <UniversalResults verticalConfigMap={verticalConfigMap}/>
+        <Facets />
+        <FilterDivider />
+        <Geolocation />
+        <Pagination />
+        <ResultsCount />
+      </SearchHeadlessProvider>
     </>
   );
 };
